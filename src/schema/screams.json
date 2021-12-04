@@ -1,0 +1,40 @@
+{
+    "screams": [
+        {
+            "screamId": 1,
+            "body": "Yo this is good stuff",
+            "userHandle": "Youngmikec",
+            "createdAt": "21/10/2021",
+            "commentCount": 10,
+            "likeCount": 20,
+            "userImage": ""
+        },
+        {
+            "screamId": 2,
+            "body": "Yo this is good stuff",
+            "userHandle": "Youngmikec",
+            "createdAt": "21/10/2021",
+            "commentCount": 10,
+            "likeCount": 20,
+            "userImage": ""
+        },
+        {
+            "screamId": 3,
+            "body": "Yo this is good stuff",
+            "userHandle": "Youngmikec",
+            "createdAt": "21/10/2021",
+            "commentCount": 10,
+            "likeCount": 20,
+            "userImage": ""
+        },
+        {
+            "screamId": 4,
+            "body": "Yo this is good stuff",
+            "userHandle": "Youngmikec",
+            "createdAt": "21/10/2021",
+            "commentCount": 10,
+            "likeCount": 20,
+            "userImage": ""
+        }
+    ]
+}
