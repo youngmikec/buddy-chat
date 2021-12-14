@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import testScreams from '../schema/screams';
 import Scream from '../components/scream';
+import Profile from '../components/profile';
 // MUI imports
 import Grid from '@material-ui/core/Grid';
 
@@ -10,21 +10,27 @@ import Grid from '@material-ui/core/Grid';
 class Home extends Component {
 
     state = {
-        screams: null
+        screams: null,
+        user: {}
     }
     url = `http://localhost:5000/screams`;
+    
 
     checkUserCredentials(){
-        const user = localStorage.getItem('user');
-        return user ? true : false;
+        const user = JSON.parse(localStorage.getItem('user'));
+        const token = localStorage.getItem('token');
+        return ( user && token ) ? {isAuthenticated: true, user} : {isAuthenticated: false, user};
     }
 
     componentDidMount(){
-        if(this.checkUserCredentials()){
+        const {isAuthenticated, user} = this.checkUserCredentials();
+        console.log('user', this.state.user);
+        if(isAuthenticated){
             axios.get(this.url)
             .then( res => {
                 this.setState({
-                    screams: res.data.payload
+                    screams: res.data.payload,
+                    user: user
                 })
             }).catch(err => console.log(err));
         }else{
@@ -34,6 +40,8 @@ class Home extends Component {
     }
 
     render() {
+        // let authenticated = (localStorage.getItem('token') && localStorage.getItem('user')) ? true : false;
+        const {isAuthenticated, user} = this.checkUserCredentials();
         let screamMarkup = this.state.screams ? this.state.screams.map(scream => <Scream key={scream._id} scream={scream}/>) : <p className="m-2">Loading ...</p>;
         return (
            <Grid container spacing={4}> 
@@ -41,7 +49,7 @@ class Home extends Component {
                    { screamMarkup }
                </Grid>
                <Grid item sm={4} xs={12}>
-                   <p>Profile ...</p>
+                   <Profile authenticated={isAuthenticated} user={user}></Profile>
                </Grid>
            </Grid>
         )

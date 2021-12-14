@@ -1,10 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 // import { Switch } from 'react-router';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Home from './pages/home';
 import Login from './pages/login';
 import Signup from './pages/signup';
+import themeFile from './utils/theme';
+import AuthRoute from './utils/authRoute';
+import jwtDecode from 'jwt-decode';
+
+//Redux
+import { Provider } from 'react-redux';
+// import store from './redux/store';
 
 //MUI Imports
 import { MuiThemeProvider, createTheme } from '@material-ui/core';
@@ -26,43 +33,46 @@ import Navbar from './components/Navbar';
 //   );
 // }
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      light: '#33c9dc',
-      main: '#00bcd4',
-      dark: '#008394',
-      contrastText: '#fff'
-    },
-    secondary: {
-      light: '#ff6333',
-      main: '#ff3d00',
-      dark: '#b22a00',
-      contrastText: '#fff'
-    },
-  },
-  typography: {
-    useNextVariants: true
+const theme = createTheme(themeFile);
+
+let authenticated;
+const token = localStorage.getItem('token');
+if(token){
+  const decodedToken = jwtDecode(token);
+  console.log('decodedToken', decodedToken);
+  if((decodedToken.expiryDate * 1000) < Date.now()){
+    window.location.href = '/login';
+    authenticated = false;
+  }else{
+    authenticated = true;
   }
-})
+}
+
 
 class App extends Component {
   render(){
     return (
       <MuiThemeProvider theme={theme}>
 
-        <div className="App">
-        <Router>
-          <Navbar/>
-          <div className="container">
-            <Routes>    
-              <Route exact path="/" element={<Home/>} />
-              <Route exact path="/login" element={<Login/>} />
-              <Route exact path="/signup" element={<Signup/>} />
-            </Routes>
-          </div>
-        </Router>
-      </div>
+        {/* <Provider store={store}> */}
+          <div className="App">
+          <Router>
+            <Fragment>
+            <Navbar/>
+            <div className="container">
+              <Routes>  
+                {/* <Route exact path="/" element={<AuthRoute/>}>
+                </Route>   */}
+                <Route exact path="/" element={<Home/>} /> 
+                <Route exact path="/login" element={<Login/>}  />
+                <Route exact path="/signup" element={<Signup/>}  />
+              </Routes>
+            </div>
+            </Fragment>
+          </Router>
+        </div>
+        
+        {/* </Provider> */}
 
       </MuiThemeProvider>
     )

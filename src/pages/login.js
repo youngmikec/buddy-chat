@@ -63,6 +63,7 @@ class Login extends Component {
         .then(({data}) => {
             console.log('data', data);
             localStorage.setItem('user', JSON.stringify(data.payload));
+            localStorage.setItem('token', data.token);
             this.setState({loading: false});
             window.location = '/';
             // this.props.history.push('/');
@@ -91,7 +92,7 @@ class Login extends Component {
             <Grid container className={classes.form}>  
                 <Grid item sm/>
                 <Grid item sm>
-                    <img src={appIcon} alt="logo-image" className={classes.image} />
+                    <img src={appIcon} className={classes.image} />
                     <Typography variant="h4" className={classes.pageTitle}>
                         Login
                     </Typography>
