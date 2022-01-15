@@ -11,7 +11,6 @@ class Home extends Component {
 
     state = {
         screams: null,
-        user: {}
     }
     url = `http://localhost:5000/screams`;
     
@@ -30,7 +29,6 @@ class Home extends Component {
             .then( res => {
                 this.setState({
                     screams: res.data.payload,
-                    user: user
                 })
             }).catch(err => console.log(err));
         }else{

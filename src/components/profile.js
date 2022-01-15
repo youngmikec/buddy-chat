@@ -6,10 +6,15 @@ import theme from '../utils/theme';
 import dayjs from 'dayjs';
 
 // MUI stuff
-import { Paper, Button, Typography } from '@material-ui/core';
+import { Paper, Button, Typography, IconButton,  } from '@material-ui/core';
+import { EditIcon } from '@material-ui/icons/Edit';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import Tooltip from '@material-ui/core/Tooltip';
 // import { MuiLink } from '@material/core/Link';
 import { LocationOn, CalendarToday } from '@material-ui/icons';
+import BackupOutlinedIcon from '@material-ui/icons/BackupOutlined';
 import LinkOff from '@material-ui/icons/LinkOff';
+import axios from 'axios';
 
 
 
@@ -18,6 +23,21 @@ class Profile extends Component {
     state = {
         loading: false,
         profile: {}
+    }
+
+    handleImageUpload = (e) => {
+        const image = e.target.files[0];
+        const formData = new FormData();
+        formData.append('profile-image', image, image.name);
+        axios.post('https://api.pmt.ng/api/multimedia/media/binary', formData)
+        .then(res => {
+            console.log(res)
+        }).catch(err => console.log(err));
+    }
+
+    handleEditImage = () => {
+        const fileInput = document.querySelector('#image-upload');
+        fileInput.click();
     }
   
     render(){
@@ -68,6 +88,11 @@ class Profile extends Component {
                         cursor: 'pointer'
                     }
                 },
+                imageButton: {
+                    position: 'absolute',
+                    top: '22%',
+                    right: '11%'
+                },
                 buttons: {
                     textAlign: 'center',
                     color: theme.palette.primary.main,
@@ -80,9 +105,17 @@ class Profile extends Component {
         const { classes, user: {userHandle, profileImage, createdAt, bio, location, website}, loading, authenticated } = this.props;
         let profileMarkup = !loading ? ( authenticated ? (
             <Paper className={ styles.paper }>
-                <div className={styles.profile['image-wrapper']}>
+                <div className={styles.profile['image-wrapper'], {position: 'relative'}}>
                     <div style={styles.profile['profile-image']}>
                         <img style={{width: '100%', borderRadius: '50%'}} src={profileImage} alt="profile"/>
+                        <input type="file" id="image-upload" onChange={this.handleImageUpload} hidden="hidden" />
+
+                        <Tooltip title="Upload profile image" placement='top'>
+                            <IconButton onClick={this.handleEditImage} className="button" style={styles.profile.imageButton} >
+                                {/* <EditIcon color="primary" /> */}
+                                <EditOutlinedIcon color="primary" />
+                            </IconButton>
+                        </Tooltip>
                     </div>
                     <hr style={{border: 'none', margin: '10px 0px'}} />
 
