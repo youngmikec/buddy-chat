@@ -14,7 +14,12 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { LocationOn, CalendarToday } from '@material-ui/icons';
 import BackupOutlinedIcon from '@material-ui/icons/BackupOutlined';
 import LinkOff from '@material-ui/icons/LinkOff';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn';
 import axios from 'axios';
+
+// components
+import EditProfile from './EditProfile';
 
 
 
@@ -38,6 +43,13 @@ class Profile extends Component {
     handleEditImage = () => {
         const fileInput = document.querySelector('#image-upload');
         fileInput.click();
+    }
+
+    handleLogout = () => {
+        localStorage.clear();
+        // window.history = '/login';
+        window.location.href = '/login';
+        console.log('user logged out');
     }
   
     render(){
@@ -71,6 +83,7 @@ class Profile extends Component {
                 },
                 'profile-details': {
                     textAlign: 'center',
+                    paddingBottom: '2em',
                     '& span, svg': {
                         verticalAlign: 'middle',
                     },
@@ -102,16 +115,16 @@ class Profile extends Component {
                 }
             }
         };
-        const { classes, user: {userHandle, profileImage, createdAt, bio, location, website}, loading, authenticated } = this.props;
+        const { classes, user: {userHandle, profileImage, email, createdAt, bio, location, website}, loading, authenticated } = this.props;
         let profileMarkup = !loading ? ( authenticated ? (
-            <Paper className={ styles.paper }>
+            <Paper style={ styles.paper }>
                 <div className={styles.profile['image-wrapper'], {position: 'relative'}}>
                     <div style={styles.profile['profile-image']}>
                         <img style={{width: '100%', borderRadius: '50%'}} src={profileImage} alt="profile"/>
                         <input type="file" id="image-upload" onChange={this.handleImageUpload} hidden="hidden" />
 
                         <Tooltip title="Upload profile image" placement='top'>
-                            <IconButton onClick={this.handleEditImage} className="button" style={styles.profile.imageButton} >
+                            <IconButton onClick={this.handleEditImage} style={styles.profile.imageButton} >
                                 {/* <EditIcon color="primary" /> */}
                                 <EditOutlinedIcon color="primary" />
                             </IconButton>
@@ -120,23 +133,23 @@ class Profile extends Component {
                     <hr style={{border: 'none', margin: '10px 0px'}} />
 
                     <div style={styles.profile["profile-details"]}>
-                        <Button className={styles.profile.buttons} color="primary" component={Link} to={`users/${userHandle}`} color="primary" variant="h5">
+                        <Button style={styles.profile.buttons} color="primary" component={Link} to={`users/${userHandle}`} color="primary" variant="text">
                             @{userHandle}
                         </Button>
                         <hr style={{border: 'none', margin: '10px 0px'}} />
 
                         {/* {bio && <Typography variant="body2"> { bio } </Typography>}
-                        <hr style={{border: 'none', margin: '10px 0px'}} />
+                        <hr style={{border: 'none', margin: '10px 0px'}} /> */}
 
                         {location && (
                             <Fragment>
-                                <LocationOn color="primary" /> 
-                                <span>{ location }</span>
+                                <LocationOnIcon color="primary" /> 
+                                <span>{ email }</span>
                                 <hr style={{border: 'none', margin: '10px 0px'}} />
                             </Fragment>
                         )}
 
-                        {website && (
+                        {/* {website && (
                             <Fragment>
                                 <LinkOff color="primary" />
                                 <a href={ website } target="_blank" rel="noopener noreferrer">
@@ -148,6 +161,14 @@ class Profile extends Component {
 
                         <CalendarToday color="primary" /> {' '}
                         <span>Joined {dayjs(createdAt).format('MMM YYYY')}</span>
+
+                        <Tooltip title="Logout" placement="top">
+                            <IconButton color="primary" onClick={this.handleLogout}>
+                                <KeyboardReturnIcon color="primary" />
+                            </IconButton> 
+                        </Tooltip>
+
+                        <EditProfile style={{ textAlign: 'center', margin: '10px auto', width: '50%' }} props={this.props} />
                     </div>
 
                 </div>
@@ -170,7 +191,7 @@ class Profile extends Component {
 
 Profile.propTypes = {
     user: PropTypes.object.isRequired,
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object
 };
 
 // export default withStyles(styles)(Profile);

@@ -23,7 +23,7 @@ class Home extends Component {
 
     componentDidMount(){
         const {isAuthenticated, user} = this.checkUserCredentials();
-        console.log('user', this.state.user);
+        console.log('user', user);
         if(isAuthenticated){
             axios.get(this.url)
             .then( res => {
